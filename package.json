@@ -1,0 +1,41 @@
+{
+  "name": "material",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "dev": "./node_modules/.bin/webpack-dev-server --content-base src --inline --hot",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^0.12.0",
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.0",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-react-html-attrs": "^2.0.0",
+    "babel-plugin-transform-class-properties": "^6.3.13",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "material-ui": "latest",
+    "react": "latest",
+    "react-hot-loader" : "latest",
+    "react-dom": "latest",
+    "react-redux": "latest",
+    "redux": "latest",
+    "redux-logger": "latest",
+    "redux-promise-middleware": "latest",
+    "redux-thunk": "latest",
+    "react-tap-event-plugin" : "latest",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+   "dev": "webpack-dev-server --content-base public --inline --hot",
+   "test": "echo \"Error: no test specified\" && exit 1"
+ },
+  "author": "Asante",
+  "license": "ISC"
+}
