@@ -3,6 +3,11 @@ import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import Paper from 'material-ui/Paper';
+
+import InfiniteScroll from 'react-infinite-scroller';
+import qwest from 'qwest';
+
 import {GridList, GridTile} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -11,11 +16,19 @@ import {deepOrange500} from 'material-ui/styles/colors';
 import Subheader from 'material-ui/Subheader';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 
+
+const imageList = [];
+const api = {
+    baseUrl: 'http://localhost:3002'
+};
+
 const muiTheme = getMuiTheme({
   palette: {
     accent1Color: deepOrange500,
   },
 });
+
+
 
 import {Tabs, Tab} from 'material-ui/Tabs';
 // From https://github.com/oliviertassinari/react-swipeable-views
@@ -27,7 +40,9 @@ const styles = {
     paddingTop: 16,
     marginBottom: 12,
     fontWeight: 400,
+    textAlign: 'center',
   },
+
   slide: {
     padding: 10,
   },
@@ -38,59 +53,28 @@ const styles = {
     flexWrap: 'wrap',
     justifyContent: 'space-around',
   },
+
+  paper: {
+    flex: 'flex',
+    flexWrap: 'wrap',
+    margin: 'auto',
+    display: 'inline-block',
+    textAlign: 'center',
+    justifyContent: 'space-around'
+  },
+
   gridList: {
     textAlign: 'left',
     width: '75%',
     height: '100%',
     overflowY: 'auto',
-    padding: 0
+    padding: 10
   },
 
 };
 
 
-const tilesData = [
-  {
-    img: 'images/grid-list/00-52-29-429_640.jpg',
-    title: 'Breakfast',
-    author: 'jill111',
-  },
-  {
-    img: 'images/grid-list/burger-827309_640.jpg',
-    title: 'Tasty burger',
-    author: 'pashminu',
-  },
-  {
-    img: 'images/grid-list/camera-813814_640.jpg',
-    title: 'Camera',
-    author: 'Danson67',
-  },
-  {
-    img: 'images/grid-list/morning-819362_640.jpg',
-    title: 'Morning',
-    author: 'fancycrave1',
-  },
-  {
-    img: 'images/grid-list/hats-829509_640.jpg',
-    title: 'Hats',
-    author: 'Hans',
-  },
-  {
-    img: 'images/grid-list/honey-823614_640.jpg',
-    title: 'Honey',
-    author: 'fancycravel',
-  },
-  {
-    img: 'images/grid-list/vegetables-790022_640.jpg',
-    title: 'Vegetables',
-    author: 'jill111',
-  },
-  {
-    img: 'images/grid-list/water-plant-821293_640.jpg',
-    title: 'Water plant',
-    author: 'BkrmadtyaKarki',
-  },
-];
+
 
 export default class TabsExampleSwipeable extends React.Component {
 
@@ -98,8 +82,47 @@ export default class TabsExampleSwipeable extends React.Component {
     super(props);
     this.state = {
       slideIndex: 0,
+      users: [],
+      hasMoreItems: true,
+      nextHref: 0,
     };
   }
+
+  loadItems(page) {
+        var self = this;
+
+        var url = api.baseUrl + '/api/user/popular/';
+        if(this.state.nextHref < 200) {
+            url = url + this.state.nextHref;
+            console.log(url);
+            var theresMore = this.state.nextHref;
+        }
+
+        qwest.get(url)
+            .then(function(xhr, resp) {
+                if(resp) {
+                  console.log(resp);
+                    var users = self.state.users;
+                    //console.log(users);
+                    resp.map((usr) => {
+                        users.push(usr);
+                        //console.log('usr');
+                    });
+
+                    if(theresMore < 200) {
+                        self.setState({
+                            users: users,
+                            nextHref: (theresMore + 10)
+                        });
+                        console.log(theresMore);
+                    } else {
+                        self.setState({
+                            hasMoreItems: false
+                        });
+                    }
+                }
+            });
+    }
 
   handleChange = (value) => {
     this.setState({
@@ -107,10 +130,50 @@ export default class TabsExampleSwipeable extends React.Component {
     });
   };
 
+
   render() {
+
+    const loader = <div className="loader">Loading ...</div>;
+        //console.log(this.state.users);
+
+        var items = [];
+        this.state.users.map((usr, i) => {1
+          console.log('yes?');
+            console.log(usr);
+            var normalizePic;
+            if (usr.picture.includes("default_profile")){
+              if (usr.picture.includes(".jpg")){
+                normalizePic = usr.picture.replace(".jpg", "_bigger.jpg");
+              }
+              else {
+                normalizePic = usr.picture.replace(".png", "_bigger.png");
+              }
+            }
+            else {
+              if (usr.picture.includes(".jpg")){
+                normalizePic = usr.picture.replace(".jpg", "_bigger.jpg");
+              }
+              else {
+                normalizePic = usr.picture.replace(".png", "_bigger.png");
+              }
+            }
+
+            console.log("Hi" , normalizePic);
+            items.push(
+
+                <div className="usr" key={i}>
+                    <a href={"https://twitter.com/" + usr.username} target="_blank">
+                        <img src={normalizePic} width="150" height="150" />
+                        <p className="title">{usr.displayname}</p>
+                    </a>
+                </div>
+            );
+        });
+
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
       <div>
+      {/* TAB CONTENTS HERE */}
         <Tabs
           onChange={this.handleChange}
           value={this.state.slideIndex}
@@ -123,36 +186,50 @@ export default class TabsExampleSwipeable extends React.Component {
           index={this.state.slideIndex}
           onChangeIndex={this.handleChange}
         >
-          <div>
+
+        {/*FIRST TAB SHOWS HOTTEST USERS*/}
+
+          <div Tab1 style={styles.slide}>
+          {/*HEADER FOR HOT TAB*/}
             <h2 style={styles.headline}>Most popular people on the market</h2>
-            Swipe to see the next slide.<br />
-            <div style={styles.root}>
-              <GridList
-                cellHeight={280}
-                style={styles.gridList}
-              >
-              <Subheader>December</Subheader>
-                {tilesData.map((tile) => (
-                  <GridTile
-                    key={tile.img}
-                    title={tile.title}
-                    subtitle={<span>by <b>{tile.author}</b></span>}
-                    actionIcon={<IconButton><StarBorder color="white" /></IconButton>}
-                    >
-                    <img src={tile.img} />
-                  </GridTile>
-                ))}
-              </GridList>
-            </div>
+                <h3 style={styles.headline}> Swipe to see the next slide.<br /></h3>
+              {/*USER GRID*/}
+              <div style={styles.headline}>
+              <Paper
+                style={styles.paper}
+                zDepth={2}
+                autoScrollBodyContent={true}>
+                <div style={styles.root}>
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={this.loadItems.bind(this)}
+                    hasMore={this.state.hasMoreItems}
+                    loader={loader}>
+                    <div className="users">
+                      {items}
+                    </div>
+                  </InfiniteScroll>
+                </div>
+              </Paper>
+              </div>
           </div>
-          <div style={styles.slide}>
-          <h2 style={styles.headline}>Newest people on the market</h2>
-            slide n°2
+
+          {/*SECOND TAB SHOWS NEWEST USERS ON MARKET*/}
+
+          <div Tab2 style={styles.slide}>
+            <h2 style={styles.headline}>Newest people on the market</h2>
+              slide n°2
           </div>
-          <div style={styles.slide}>
-          <h2 style={styles.headline}>Your friends on the market</h2>
-            slide n°3
+
+          {/*THIRD TAB SHOWS USERS THAT ARE FRIENDS OF CURRENT USER*/}
+
+          <div Tab3 style={styles.slide}>
+            <h2 style={styles.headline}>Your friends on the market</h2>
+              slide n°3
           </div>
+
+          {/*END OF TABS*/}
+
         </SwipeableViews>
       </div>
       </MuiThemeProvider>

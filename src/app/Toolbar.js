@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Dialog from 'material-ui/Dialog';
 
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
@@ -29,6 +29,10 @@ const styles = {
     textAlign: 'center',
     paddingTop: 0,
   },
+  modal: {
+    width: '75%',
+    height: '50%'
+  }
 };
 
 export default class newToolbar extends React.Component {
@@ -37,11 +41,31 @@ export default class newToolbar extends React.Component {
     super(props);
     this.state = {
       value: 3,
+      open: false
     };
   }
 
-  handleChange(event, index, value) {
-      this.setState({value})
+
+  handleChange = (event) => {
+    this.setState({
+      value: event.target.value,
+    });
+  };
+
+  enterSearch = (event) => {
+    if(event.keyCode == 13){
+      console.log(this.state.value);
+      this.searchModalOpen();
+    }
+  };
+
+  searchModalOpen = () => {
+    this.setState({open: true});
+    console.log('This working?');
+  };
+
+  searchModalClose = () => {
+    this.setState({open: false});
   };
 
   render() {
@@ -61,8 +85,21 @@ export default class newToolbar extends React.Component {
           </DropDownMenu>
         </ToolbarGroup>
         <ToolbarGroup>
+          <Dialog
+            title="Search Modal"
+            contentStyle={styles.modal}
+            modal={false}
+            open={this.state.open}
+            onRequestClose={this.searchModalClose}
+          >
+            <h1> "This is what you searched for:" {this.state.value}</h1>
+          </Dialog>
           <TextField
-            hintText="Search"
+            ref='search'
+            id="text-field-controlled"
+            hintText= "Search"
+            onChange={this.handleChange}
+            onKeyDown={this.enterSearch}
           />
         </ToolbarGroup>
         <ToolbarGroup>

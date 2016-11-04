@@ -1,0 +1,36 @@
+.users {
+    /* display: flex; */
+    flex-wrap: wrap;
+    justify-content: center;
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+  }
+  .usr:nth-child(5n) {
+    margin-right: 0;
+  }
+}
+
+.usr {
+  float: left;
+  width: 150px;
+  margin-right: 15px;
+}
+.usr img {
+  width: 100%;
+}
+.usr p {
+  width: 150px;
+  margin-top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+}
+.usr a {
+  text-decoration: none;
+  color: inherit;
+}
+.Paper {
+  margin: auto;
+}
