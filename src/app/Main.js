@@ -60,7 +60,8 @@ const styles = {
     margin: 'auto',
     display: 'inline-block',
     textAlign: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    width: '60%',
   },
 
   gridList: {
@@ -189,7 +190,7 @@ export default class TabsExampleSwipeable extends React.Component {
 
         {/*FIRST TAB SHOWS HOTTEST USERS*/}
 
-          <div Tab1 style={styles.slide}>
+          <div className="Tab1" style={styles.slide}>
           {/*HEADER FOR HOT TAB*/}
             <h2 style={styles.headline}>Most popular people on the market</h2>
                 <h3 style={styles.headline}> Swipe to see the next slide.<br /></h3>
@@ -197,8 +198,7 @@ export default class TabsExampleSwipeable extends React.Component {
               <div style={styles.headline}>
               <Paper
                 style={styles.paper}
-                zDepth={2}
-                autoScrollBodyContent={true}>
+                zDepth={2}>
                 <div style={styles.root}>
                   <InfiniteScroll
                     pageStart={0}
@@ -216,14 +216,14 @@ export default class TabsExampleSwipeable extends React.Component {
 
           {/*SECOND TAB SHOWS NEWEST USERS ON MARKET*/}
 
-          <div Tab2 style={styles.slide}>
+          <div className="Tab2" style={styles.slide}>
             <h2 style={styles.headline}>Newest people on the market</h2>
               slide n°2
           </div>
 
           {/*THIRD TAB SHOWS USERS THAT ARE FRIENDS OF CURRENT USER*/}
 
-          <div Tab3 style={styles.slide}>
+          <div className="Tab3" style={styles.slide}>
             <h2 style={styles.headline}>Your friends on the market</h2>
               slide n°3
           </div>
